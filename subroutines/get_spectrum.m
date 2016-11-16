@@ -1,4 +1,4 @@
-function [ V,D ] = get_spectrum( A,DEA,mode,numvec,numvec_eigs ,c )
+function [ V,D ] = get_spectrum( A,DEA, HDEA, mode,numvec,numvec_eigs ,c )
 %GET_SPECTRUM compute spectrum of various matrices.
     if(numvec_eigs<numvec)
         numvec_eigs=numvec;
@@ -13,7 +13,12 @@ function [ V,D ] = get_spectrum( A,DEA,mode,numvec,numvec_eigs ,c )
         dprintf('computing eigs of ')
         if(mode==0)
             dprintf('DEA matrix\n');
-            [V, D, flag]=eigs(DEA,numvec_eigs,'LM',opts);		
+            [V, D, flag]=eigs(DEA,numvec_eigs,'LM',opts);
+        %%%%%%%%%% by lh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        elseif(mode==10) % High-order DEA Matrix
+            dprintf('High-order DEA matrix\n');
+            [V, D, flag]=eigs(HDEA,numvec_eigs,'LM',opts);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         elseif(mode==1)%modularity
             opts.issym = 1;
             ki=0;  kit=ki;
@@ -51,8 +56,8 @@ function [ V,D ] = get_spectrum( A,DEA,mode,numvec,numvec_eigs ,c )
             [V,D,flag] = eigs(F,numvec_eigs,'LM',opts);
             V=V(length(A)+1:2*length(A),:);
             %V=V(1:length(A),:);
-        %%%%%% new %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        elseif(mode==6) %H
+        %%%%%% by lh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        elseif(mode==6) % H (Bethe Hessian)
             dprintf('Bethe Hessian \n');
             D=A-A;
             D(speye(size(A))==1)=sum(A);

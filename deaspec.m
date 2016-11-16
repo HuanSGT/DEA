@@ -38,7 +38,7 @@ function [result] = deaspec(varargin)
 %        5: Matrix F, called B' in the paper, which has the same set of
 %        non-trivial engenvalues and eigenvectors as DEA matrix.
 %        6: Matrix H, the Bethe Hessian matrix.
-%        7(Comming soon): High-order non-backtracking matrix.
+%        10: High-order DEA matrix.
 %    lcc, flat to use larest connected component, default: 0
 %        1: use LCC
 %        0: do not use LCC.
@@ -176,10 +176,18 @@ end
         fprintf('Average degree of DEA matrix is : %g\n',c_dea);
 
     end
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    HDEA = 0; HDEAM = 0;
+    if(mode == 10) % using high-order DEA matrix
+        [ HDEA, HDEAM ] = get_hdea( E );
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     tic
     if(approx == 0 )
         %% find spectrum
-        [ V,D ] = get_spectrum( A, DEA, mode, numvec, numvec_eigs, c);
+        [ V,D ] = get_spectrum( A, DEA, HDEA, mode, numvec, numvec_eigs, c);
     else
         %% use approximate eigenvector
         [ V,D ] = get_approx_vec(A, DEA, DEAIM, mode, approx, conf_true);
@@ -188,7 +196,7 @@ end
     %% infer configuration
     ovl=0; conf_infer=[]; Dsort=[]; Vsort=[]; cuts=[];Rcuts=[];Ncuts=[];
     if(do_clustering>=0)
-        [Dsort,conf_infer,Vsort]=compute_conf_infer(q,D,V,numvec,do_clustering,mode,cbegin,cend,ovl_real,0,conf_true,DEAM);
+        [Dsort,conf_infer,Vsort]=compute_conf_infer(q,D,V,numvec,do_clustering,mode,cbegin,cend,ovl_real,0,conf_true,DEAM, HDEAM);
         [cuts,Rcuts,Ncuts]=get_cuts(E,conf_infer);
     end
     %[conf_true,conf_infer]

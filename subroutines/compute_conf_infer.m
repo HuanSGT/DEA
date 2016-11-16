@@ -1,4 +1,4 @@
-function [D,conf_infer,Vsort]=compute_conf_infer(Q,D,V,numvec_,do_clustering,mode,cbegin,cend,only_real_,smallest_,conf_true, Am)
+function [D,conf_infer,Vsort]=compute_conf_infer(Q,D,V,numvec_,do_clustering,mode,cbegin,cend,only_real_,smallest_,conf_true, Am, HAm)
     %COMPUTE_CONF_INFER compute a configuration from eigenvectors
     only_real=1;
     numvec=abs(numvec_);
@@ -47,6 +47,8 @@ function [D,conf_infer,Vsort]=compute_conf_infer(Q,D,V,numvec_,do_clustering,mod
     end
 	if(mode==0) % DEA matrix
 		Sv=Am*Vsort;
+    elseif(mode==10) % High-order DEA matrix
+        Sv=HAm*Vsort;
 	else
 		Sv=Vsort;
 	end

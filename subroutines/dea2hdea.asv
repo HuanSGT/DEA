@@ -1,0 +1,42 @@
+function [hdea, hdeaM] = dea2hdea(dea, DE)
+    sz = size(dea); twom = sz(1);
+    %E = [floor((idx - 1) / n) + 1, mod(idx - 1, n) + 1];
+    %sz = size(xs); m = sz(1);
+    p = sum(sum(dea));
+    dea(dea > 0.5) = 1:p;
+    
+    %Computing hdeam
+    inds = find(dea);
+    [~, js] = ind2sub(size(dea), inds);
+    hdeaM = sparse(js,
+    
+    
+    hM = sum( sum(dea) .* sum(dea,2)' ); % number of edges in hdea
+    hMM = sum(sum(dea));
+    
+    hdeaE = zeros(hM, 2); % hdea's edges
+    hdeaEM = zeros(hMM, 2);
+    
+    cntEM = 0;
+    
+    nodes1 = DE(:,1);
+    nodes2 = DE(:,2);
+    
+    %Computing hea's Edges
+    cntE = 0;
+    for i = 1:twom
+        row = dea(i,:);
+        col = dea(:,i)';
+        is = find( row ); xs = row(row > 0);
+        js = find( col ); ys = col(col > 0);
+        [iss, jss] = ndgrid(is,js);
+        [xss, yss] = ndgrid(xs,ys);
+        idx = nodes2(iss) ~= nodes1(jss);
+        nidx = sum(idx);
+        hdeaE(cntE + 1 : cntE + nidx, :) = [xss(idx), yss(idx)];
+        cntE = cntE + nidx;
+    end
+    
+    hdea = sparse(hdeaE(1:cntE,1), hdeaE(1:cntE,2), ones(cntE,1), p, p);
+
+end

@@ -1,0 +1,14 @@
+function [ hdea, HDEAM ] = get_hdea( A, E )
+
+    disp('computing high-order DEA matrix...');
+
+    [DEA, DEAM, ~, DE] = E2dea_fast(E);
+    [hdea, HDEAM, ~] = dea2hdea( DEA, DE );
+    
+    HDEAM = DEAM * HDEAM;
+    
+    % HDEA : P * P
+    % HDEAM : 2M * P
+    % P is the number of directed 2-edge path
+
+end

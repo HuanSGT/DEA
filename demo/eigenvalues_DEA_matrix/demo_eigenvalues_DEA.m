@@ -3,19 +3,28 @@
 path(path,'../../');
 path(path,'../../subroutines/');
 %%parameters
-opt.N=10000; %1000; %system size
-opt.c=3; %average degree
+opt.N=100000; %1000; %system size
+opt.c=3; %3; %average degree
 opt.epsilon= 1 / 5; %0.1; %cout/cin
 opt.q=2; %number of groups
 opt.numvec=2; %6; %number of vectors you want
-opt.seed=1;%1;
-opt.mode=6; %5;
+opt.seed=23;%1;
 
-%%call deaspec
-result=deaspec(opt);
+modes = [6, 0, 10];
 
-%%output result
-fprintf('First %d eigenvalues of DEA matrix are:\n',opt.numvec)
-disp(result.D);
-fprintf('Overlap to true configuration computed using sign of real eigenvectors are:\n');
-disp(result.ovl);
+for i = 1 : length(modes)
+    
+    opt.mode=modes(i); %5;
+    
+    %%call deaspec
+    result=deaspec(opt);
+    
+    %%output result
+    fprintf('First %d eigenvalues of DEA matrix are:\n',opt.numvec)
+    disp(result.D);
+    fprintf('Overlap to true configuration computed using sign of real eigenvectors are:\n');
+    disp(result.ovl);
+end
+
+%disp(result.E);
+%disp(result.dea);
